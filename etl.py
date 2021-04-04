@@ -102,7 +102,7 @@ def process_log_data(spark, input_data, output_data):
      )
     
     # write time table to parquet files partitioned by year and month
-    time_table.write.parquet(path= output_data + 'time/time.parquet')
+    time_table.write.partitionBy("year", "month").parquet(path= output_data + 'time/time.parquet')
 
     # read in song data to use for songplays table   
     #song_data =  input_data + "song_data/*/*/*.json" 
@@ -113,7 +113,9 @@ def process_log_data(spark, input_data, output_data):
     
     songplays_table = spark.sql("""
     SELECT monotonically_increasing_id() AS songplay_id,
-        to_timestamp(logs_data.ts/1000) AS start_time,        
+        to_timestamp(logs_data.ts/1000) AS start_time,
+        month(to_timestamp(logs_data.ts/1000)) AS month,
+        year(to_timestamp(logs_data.ts/1000)) AS year,
         logs_data.userId AS user_id,
         logs_data.level AS level,
         songs_data.song_id AS song_id,
@@ -124,13 +126,13 @@ def process_log_data(spark, input_data, output_data):
     FROM logs_data JOIN songs_data ON logs_data.artist = songs_data.artist_name""")
     
     # write songplays table to parquet files partitioned by year and month
-    songplays_table.write.parquet(os.path.join(output_data, 'songplays.parquet'), 'overwrite')
+    songplays_table.write.partitionBy('year','month').parquet(os.path.join(output_data, 'songplays.parquet'), 'overwrite')
 
 
 def main():
     spark = create_spark_session()
     input_data = "s3a://udacity-dend/"
-    output_data = "s3a://"
+    output_data = "s3a://shalbucket/"
     
     process_song_data(spark, input_data, output_data)    
     process_log_data(spark, input_data, output_data)
