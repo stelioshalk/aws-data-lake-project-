@@ -58,5 +58,5 @@ The project includes three files:
 
 - etl.py reads data from S3, processes that data using Spark, and writes them back to S3
 - dl.cfgcontains your AWS credentials
-- README.md provides discussion on your process and decisions
+- README.md provides information about this project
 
