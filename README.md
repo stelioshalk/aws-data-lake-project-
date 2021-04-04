@@ -49,7 +49,7 @@ Using the song and log datasets, you'll need to create a star schema optimized f
 
 # How ro run the project.
 1. You will need an S3 account to test this project. Create an S3 bucket and use this as the output data destination. The project saves the data as parquet files.
-2.Edit the dl.cfg file and add your aws user access details.
+2. Edit the dl.cfg file and add your aws user access details.
 3. Modify the etl.py and set the  output_data  to be pointing to the bucket that you created. for example set output_data = "s3a://yourbucket/"
 4. Use console terminal and execute the python etl.py.
 
